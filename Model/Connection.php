@@ -10,7 +10,7 @@ use PDO;
 use PDOException;
 
 // Buscando dados de configuração de Banco de Dados
-require __DIR__ ."../Config/configuration.php";
+require_once __DIR__ ."../..Config/configuration.php";
 
 class Connection {
     private  static $stmt;
