@@ -1,5 +1,4 @@
 <?php
-
 // Configurações de uso
 
 // Exemplos de uso em outras classes = use Model/

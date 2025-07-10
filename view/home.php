@@ -1,3 +1,28 @@
+<?php
+
+require_once('../vendor/autoload.php');
+
+use Model\Imcs;
+
+//Criando um objeto para representar cada IMC criado
+$imc = new Imcs();
+
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    if(isset($_POST['weight'],$_POST['height'])){
+        $weight = $_POST['weight'];
+        $height = $_POST['height'];
+
+        // Round é igual ao toFixed(); do JavaScript
+        // Round arredonda o número para o número de casas decimais que você passar como segundo parâmetro
+        // Exemplo: round(10.123456, 2) = 10.12
+        $result = round( $weight / ($height * $height),2);
+
+        $imc->createImc($weight, $height, $result);
+
+}
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
