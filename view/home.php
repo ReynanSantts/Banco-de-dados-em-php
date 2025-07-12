@@ -2,10 +2,14 @@
 
 require_once('../vendor/autoload.php');
 
-use Model\Imcs;
+use Controller\ImcController;
 
 //Criando um objeto para representar cada IMC criado
-$imc = new Imcs();
+$imcController = new ImcController();
+
+// var_dump($imcController);
+
+$imcResult = null;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST['weight'],$_POST['height'])){
@@ -15,9 +19,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         // Round é igual ao toFixed(); do JavaScript
         // Round arredonda o número para o número de casas decimais que você passar como segundo parâmetro
         // Exemplo: round(10.123456, 2) = 10.12
-        $result = round( $weight / ($height * $height),2);
+        // $result = round( $weight / ($height * $height),2);
 
-        $imc->createImc($weight, $height, $result);
+        // Utilizando o Controler como intermediario manipulaçao e gerenciamento de dados front/back
+        $imcResult = $imcController->calculateImc($weight, $height);
+
+        // Verificar se os campos foram preenchidos
+        if($imcResult["BMIrange"] != "O peso e altura devem ser informados. "){
+            $imcController->saveImc($weight, $height, $imcResult['imc']);
+        }
 
 }
 }
@@ -135,6 +145,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="result">
                     <div class="result__info">
                         <!-- RESULTADO DO IMC -->
+
+                         <?php if ($imcResult): ?>
+                            <p>Seu IMC é: <?php echo $imcResult['imc'] ?? '';?> </p>
+                            <p>Categoria <?php echo $imcResult['BMIrange'];?> </p>
+
+                            <?php else: ?>
+                                <i class="bi bi-calculator"></i>
+                                <p>Preencha os dados ao lado para ver o resultado</p>
+                                <?php endif; ?>
                     </div>
                 </div>
             </div>
