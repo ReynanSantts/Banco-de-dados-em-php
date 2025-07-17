@@ -1,11 +1,13 @@
 <?php
 // Buscando e carregando o arquivo de autoload do Composer
 require_once '../vendor/autoload.php';
-// Importando a classe User
-use Model\User;
+// Importando o userController
+use Controller\User;
+use Controller\UserController;
 
-$user = new User();
+$userController = new UserController();
 
+$registerUserMessage = '';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     if(isset($_POST['user_fullname'], $_POST['email'], $_POST['password'])) {
@@ -13,7 +15,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        $user->registerUser($user_fullname, $email, $password);
+        // Uso do Controller para verificação de e-mail e cadastro de usuario
+        // Ja existe um e-mail cadastrado?
+        if($userController->checkUserByEmail($email)) {
+            $registerUserMessage = 'Já existe um usuário cadastrado com este e-mail.';
+        }else {
+            //Redireciona para uma outra pagina, quando o usuario for cadastrado.,
+            if($userController->registerUser($user_fullname, $email, $password)) {
+                header('Location: ../index.php');
+                exit();
+            }else{
+                $registerUserMessage = 'Erro ao registrar informações.';
+            }
+        }
     }
 }
 
@@ -113,7 +127,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <p class="text-center">Já tem uma conta? <a href="../index.php">Faça login aqui</a></p>
             </div>
         </form>
-        <p></p>
+        <p> <?php echo $registerUserMessage; ?> </p>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
