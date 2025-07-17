@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require_once '../vendor/autoload.php';
 
 // IMPORTANDO O CONTROLLER
@@ -9,7 +10,17 @@ use Controller\ImcController;
 $imcController = new ImcController();
 
 $imcResult = null;
+$userInfo = null;
 
+// Verifica se houve login
+if($userController->isLoggedIn()){
+    header('Location: ../index.php');
+    exit();
+}
+
+$user_id = $_SESSION['id'];
+$user_fullname = $_SESSION['user_fullname'];
+$email = $_SESSION['email'];
 //var_dump($imcController->calculateImc($weight, $height));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -70,6 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </svg>
                 </figure>
                 <!-- INFORMAÇÃO DO USUÁRIO -->
+                <?php if ($userInfo): ?>
+                    <div class="user_info_details d-flex flex-column">
+                        <p class="text-white m-0"><?php echo htmlspecialchars($userInfo['user_fullname']) ?></p>
+                        <p><?php echo htmlspecialchars($userInfo['email']) ?></p>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="d-flex gap-4">
