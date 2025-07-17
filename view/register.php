@@ -1,30 +1,32 @@
 <?php
-// Buscando e carregando o arquivo de autoload do Composer
+// BUSCANDO E CARREGANDO O ARQUIVO AUTOLOAD
 require_once '../vendor/autoload.php';
-// Importando o userController
-use Controller\User;
+
+// IMPORTANDO O USERCONTROLLER
 use Controller\UserController;
 
 $userController = new UserController();
 
 $registerUserMessage = '';
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['user_fullname'], $_POST['email'], $_POST['password'])) {
         $user_fullname = $_POST['user_fullname'];
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-        // Uso do Controller para verificação de e-mail e cadastro de usuario
-        // Ja existe um e-mail cadastrado?
+        // USO DO CONTROLLER PARA VERIFICAÇÃO DE E-MAIL E CADASTRO DE USUÁRIO
+        
+        // JÁ EXISTE UM E-MAIL CADASTRADO?
         if($userController->checkUserByEmail($email)) {
-            $registerUserMessage = 'Já existe um usuário cadastrado com este e-mail.';
-        }else {
-            //Redireciona para uma outra pagina, quando o usuario for cadastrado.,
-            if($userController->registerUser($user_fullname, $email, $password)) {
+            $registerUserMessage = "Já existe um usuário cadastrado com esse endereço de e-mail.";
+        } else {
+            // SE O E-MAIL JÁ EXISTE, CRIE O USUÁRIO
+            if($userController->createUser($user_fullname, $email, $password)) {
+                // REDIRECIONAR PARA UMA OUTRA PÁGINA, QUANDO O USUÁRIO FOR CADASTRADO
                 header('Location: ../index.php');
                 exit();
-            }else{
+            } else {
                 $registerUserMessage = 'Erro ao registrar informações.';
             }
         }
@@ -32,8 +34,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 ?>
-
-
 
 
 

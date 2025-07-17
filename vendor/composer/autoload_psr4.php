@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Reynan\\Fitcalc\\' => array($baseDir . '/fitCalc'),
     'Model\\' => array($baseDir . '/Model'),
     'Controller\\' => array($baseDir . '/Controller'),
+    'Ana\\Fitcalc\\' => array($baseDir . '/fitCalc'),
 );

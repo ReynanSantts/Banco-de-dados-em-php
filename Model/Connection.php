@@ -1,30 +1,33 @@
 <?php
-// Configurações de uso
+// CONFIGURAÇÕES DE USO
 
-// Exemplos de uso em outras classes = use Model/
+// EXEMPLO DE USO EM OUTRAS CLASSES = use Model\Connection
 namespace Model;
 
-// Importação para conexão do banco de dados
+// IMPORTAÇÃO PARA CONEXÃO COM BANCO DE DADOS
 use PDO;
 use PDOException;
 
-// Buscando dados de configuração de Banco de Dados
-require_once __DIR__ ."../../Config/configuration.php";
+// BUSCANDO DADOS DE CONFIGURAÇÃO DO BANCO DE DADOS
+require_once __DIR__ . "/../Config/configuration.php";
 
-class Connection {
-    private  static $stmt;
+class Connection
 
-    // Conexão com o banco de dados
-    public static function getInstance(){
-        // Criar uma nova conexao somente se ela não existir
-        try{
-             if(empty((self::$stmt))){
-            self::$stmt = new PDO("mysql:host=" . DB_HOST . ";port=" . DB_PORT.";dbname=".DB_NAME. '',DB_USER, DB_PASSWORD);
-        }
-        } catch(PDOException $error ) {
-            die("Erro ao estabelecer conexão ". $error->getMessage());
+    // ATRIBUTO ESTÁTICO QUE IRÁ PERMITIR A CONEXÃO ABAIXO
+{
+    private static $stmt;
+
+    public static function getInstance(): PDO
+    {
+        if (empty(self::$stmt)) {
+            try {
+                self::$stmt = new PDO('mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . '', DB_USER, DB_PASSWORD);
+            } catch (PDOException $error) {
+                die("Erro de conexão: " . $error->getMessage());
+            }
         }
         return self::$stmt;
     }
 }
+
 ?>

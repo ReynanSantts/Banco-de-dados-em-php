@@ -1,38 +1,35 @@
 <?php
 
-require_once('../vendor/autoload.php');
+require_once '../vendor/autoload.php';
 
+// IMPORTANDO O CONTROLLER
 use Controller\ImcController;
 
-//Criando um objeto para representar cada IMC criado
+// CRIANDO UM OBJETO PARA REPRESENTAR CADA IMC CRIADO
 $imcController = new ImcController();
-
-// var_dump($imcController);
 
 $imcResult = null;
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    if(isset($_POST['weight'],$_POST['height'])){
+//var_dump($imcController->calculateImc($weight, $height));
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['weight'], $_POST['height'])) {
         $weight = $_POST['weight'];
         $height = $_POST['height'];
 
-        // Round é igual ao toFixed(); do JavaScript
-        // Round arredonda o número para o número de casas decimais que você passar como segundo parâmetro
-        // Exemplo: round(10.123456, 2) = 10.12
-        // $result = round( $weight / ($height * $height),2);
-
-        // Utilizando o Controler como intermediario manipulaçao e gerenciamento de dados front/back
+        // UTILIZANDO O CONTROLER COMO INTERMEDIÁRIO DA MANIPULAÇÃO E GERENCIAMENTO DE DADOS FRONT/BACK(BANCO DE DADOS)
         $imcResult = $imcController->calculateImc($weight, $height);
 
-        // Verificar se os campos foram preenchidos
-        if($imcResult["BMIrange"] != "O peso e altura devem ser informados. "){
-            $imcController->saveImc($weight, $height, $imcResult['imc']);
+        // VERIFICAR SE OS CAMPOS FORAM PREENCHIDOS
+        if ($imcResult['BMIrange'] != "O peso e a altura devem conter valores positivos.") {
+            $imcController->saveIMC($weight, $height, $imcResult['imc']);
         }
+    }
+}
 
-}
-}
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -64,7 +61,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     <header class="bgLinearGradient">
         <nav class="d-flex justify-content-between flex-md-row flex-column-reverse gap-2">
             <div class="user_info d-flex justify-content-center align-items-center gap-3">
-                <figure class="rounded-circle d-flex justify-content-center align-items-center " style="background-color: #fff3; width: 40px; height: 40px; border-radius: 50%;">
+                <figure class="rounded-circle d-flex justify-content-center align-items-center "
+                    style="background-color: #fff3; width: 40px; height: 40px; border-radius: 50%;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" class="bi bi-person"
                         viewBox="0 0 16 16">
                         <path
@@ -145,15 +143,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="result">
                     <div class="result__info">
                         <!-- RESULTADO DO IMC -->
+                        <?php if ($imcResult): ?>
+                            <p>Seu IMC é: <?php echo $imcResult['imc'] ?? ''; ?> </p>
+                            <p>Categoria: <?php echo $imcResult['BMIrange']; ?> </p>
 
-                         <?php if ($imcResult): ?>
-                            <p>Seu IMC é: <?php echo $imcResult['imc'] ?? '';?> </p>
-                            <p>Categoria <?php echo $imcResult['BMIrange'];?> </p>
-
-                            <?php else: ?>
-                                <i class="bi bi-calculator"></i>
-                                <p>Preencha os dados ao lado para ver o resultado</p>
-                                <?php endif; ?>
+                        <?php else: ?>
+                            <i class="bi bi-calculator"></i>
+                            <p>Preencha os dados ao lado para ver o resultado</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
